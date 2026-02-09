@@ -1,6 +1,7 @@
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { useRef, useState, useEffect } from 'react';
 import { useTheme } from '@hooks/useTheme';
+import { useAuth } from '@hooks/useAuth';
 import boardsData from '@data/data.json';
 import type { BoardsData } from '@/types/types';
 
@@ -29,10 +30,14 @@ export function Header({
 }: HeaderProps) {
   const { boardId } = useParams<{ boardId?: string }>();
   const { theme, setTheme } = useTheme();
+  const { user, isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -44,6 +49,20 @@ export function Header({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [menuOpen]);
+
+  useEffect(() => {
+    if (!userMenuOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(e.target as Node)
+      ) {
+        setUserMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [userMenuOpen]);
 
   const currentIndex =
     boardId != null && /^\d+$/.test(boardId) ? parseInt(boardId, 10) : null;
@@ -68,6 +87,11 @@ export function Header({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [dropdownOpen]);
+
+  const handleLogout = () => {
+    logout();
+    void navigate('/login', { replace: true });
+  };
 
   return (
     <header className="app-header">
@@ -201,6 +225,83 @@ export function Header({
           />
           <span className="app-header-add-label">+ Add New Task</span>
         </button>
+        {isLoggedIn && (
+          <div ref={userMenuRef} style={{ position: 'relative' }}>
+            <button
+              type="button"
+              aria-label="Account menu"
+              aria-expanded={userMenuOpen}
+              aria-haspopup="true"
+              onClick={() => setUserMenuOpen((o) => !o)}
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: '9999px',
+                border: '1px solid var(--lines)',
+                background: 'var(--secondary-bg)',
+                color: 'var(--text-primary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontFamily:
+                  'Plus Jakarta Sans, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+                fontSize: 14,
+                fontWeight: 700,
+                cursor: 'pointer',
+              }}
+            >
+              {(user?.name ?? user?.email ?? 'U').slice(0, 1).toUpperCase()}
+            </button>
+            {userMenuOpen && (
+              <div
+                role="menu"
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: 8,
+                  minWidth: 160,
+                  padding: 8,
+                  borderRadius: 8,
+                  background: 'var(--bg-main)',
+                  border: '1px solid var(--lines)',
+                  boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+                  zIndex: 20,
+                }}
+              >
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="dropdown-option"
+                  style={{ display: 'block', width: '100%', textAlign: 'left' }}
+                  onClick={() => {
+                    void navigate('/admin');
+                    setUserMenuOpen(false);
+                  }}
+                >
+                  Admin
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  className="dropdown-option"
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    textAlign: 'left',
+                    color: 'var(--destructive)',
+                  }}
+                  onClick={() => {
+                    handleLogout();
+                    setUserMenuOpen(false);
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
+        )}
         <div ref={menuRef} style={{ position: 'relative' }}>
           <button
             type="button"
