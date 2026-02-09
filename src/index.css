@@ -169,6 +169,24 @@
     gap: 8px;
     flex-shrink: 0;
   }
+  .app-menu-anchor {
+    position: relative;
+  }
+  .app-menu-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    min-width: 180px;
+    padding: 8px;
+    border-radius: 8px;
+    background-color: var(--bg-main);
+    border: 1px solid var(--lines);
+    box-shadow:
+      0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -4px rgb(0 0 0 / 0.1);
+    z-index: 20;
+  }
   .app-header-user-nav {
     display: flex;
     align-items: center;
@@ -198,6 +216,33 @@
   }
   .app-header-link-logout:hover {
     color: var(--destructive-hover);
+  }
+  .app-header-user-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    border: 1px solid var(--lines);
+    background-color: var(--secondary-bg);
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family:
+      'Plus Jakarta Sans',
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .app-header-icon-button {
+    padding: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
   }
   .app-main {
     width: 100%;

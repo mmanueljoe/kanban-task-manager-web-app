@@ -226,54 +226,23 @@ export function Header({
           <span className="app-header-add-label">+ Add New Task</span>
         </button>
         {isLoggedIn && (
-          <div ref={userMenuRef} style={{ position: 'relative' }}>
+          <div ref={userMenuRef} className="app-menu-anchor">
             <button
               type="button"
               aria-label="Account menu"
               aria-expanded={userMenuOpen}
               aria-haspopup="true"
               onClick={() => setUserMenuOpen((o) => !o)}
-              style={{
-                width: 32,
-                height: 32,
-                borderRadius: '9999px',
-                border: '1px solid var(--lines)',
-                background: 'var(--secondary-bg)',
-                color: 'var(--text-primary)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontFamily:
-                  'Plus Jakarta Sans, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
-                fontSize: 14,
-                fontWeight: 700,
-                cursor: 'pointer',
-              }}
+              className="app-header-user-button"
             >
               {(user?.name ?? user?.email ?? 'U').slice(0, 1).toUpperCase()}
             </button>
             {userMenuOpen && (
-              <div
-                role="menu"
-                style={{
-                  position: 'absolute',
-                  top: '100%',
-                  right: 0,
-                  marginTop: 8,
-                  minWidth: 160,
-                  padding: 8,
-                  borderRadius: 8,
-                  background: 'var(--bg-main)',
-                  border: '1px solid var(--lines)',
-                  boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-                  zIndex: 20,
-                }}
-              >
+              <div role="menu" className="app-menu-panel">
                 <button
                   type="button"
                   role="menuitem"
                   className="dropdown-option"
-                  style={{ display: 'block', width: '100%', textAlign: 'left' }}
                   onClick={() => {
                     void navigate('/admin');
                     setUserMenuOpen(false);
@@ -302,45 +271,23 @@ export function Header({
             )}
           </div>
         )}
-        <div ref={menuRef} style={{ position: 'relative' }}>
+        <div ref={menuRef} className="app-menu-anchor">
           <button
             type="button"
             aria-label="More options"
             aria-expanded={menuOpen}
             aria-haspopup="true"
             onClick={() => setMenuOpen((o) => !o)}
-            style={{
-              padding: 10,
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: 'var(--text-muted)',
-            }}
+            className="app-header-icon-button"
           >
             <img src={iconEllipsis} alt="" width={5} height={20} />
           </button>
           {menuOpen && canEditBoard && (
-            <div
-              role="menu"
-              style={{
-                position: 'absolute',
-                top: '100%',
-                right: 0,
-                marginTop: 8,
-                minWidth: 192,
-                padding: 8,
-                borderRadius: 8,
-                background: 'var(--bg-main)',
-                border: '1px solid var(--lines)',
-                boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
-                zIndex: 20,
-              }}
-            >
+            <div role="menu" className="app-menu-panel">
               <button
                 type="button"
                 role="menuitem"
                 className="dropdown-option"
-                style={{ display: 'block', width: '100%', textAlign: 'left' }}
                 onClick={() => {
                   onEditBoard?.();
                   setMenuOpen(false);
@@ -352,12 +299,7 @@ export function Header({
                 type="button"
                 role="menuitem"
                 className="dropdown-option"
-                style={{
-                  display: 'block',
-                  width: '100%',
-                  textAlign: 'left',
-                  color: 'var(--destructive)',
-                }}
+                style={{ color: 'var(--destructive)' }}
                 onClick={() => {
                   onDeleteBoard?.();
                   setMenuOpen(false);
